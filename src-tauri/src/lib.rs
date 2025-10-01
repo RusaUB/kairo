@@ -1,11 +1,8 @@
 use tauri::{menu::{Menu, MenuItem}, tray::TrayIconBuilder};
 
 mod cred;
+mod db;
 
-#[tauri::command]
-fn greet(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
-}
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -40,7 +37,15 @@ pub fn run() {
 
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![greet, cred::get_api_key, cred::save_api_key])
+        .invoke_handler(tauri::generate_handler![
+            db::add_llmprovider,
+            db::get_llmprovider,
+            db::get_all_llmproviders,
+            
+            db::add_agent,
+            db::get_agent,
+            db::get_all_agents,
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
